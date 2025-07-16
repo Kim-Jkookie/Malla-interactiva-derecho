@@ -2,127 +2,288 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Malla Interactiva Derecho</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malla Derecho UV</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .malla {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .semestre {
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      background-color: #fff;
+      padding: 10px;
+      width: 300px;
+    }
+    .semestre h2 {
+      text-align: center;
+    }
+    .ramos {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .ramo {
+      background-color: #ffc0cb;
+      padding: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .ramo.aprobado {
+      background-color: #a020f0;
+      color: white;
+      text-decoration: line-through;
+    }
+    .ramo.bloqueado {
+      background-color: #d3d3d3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
-  <h1>Malla Interactiva Derecho</h1>
-  <div class="grid">
-    <!-- Semestre 1 -->
-    <div class="semestre">
-      <h2>1° Semestre</h2>
-      <div class="ramo" data-id="romano" onclick="toggleRamo(this)">Derecho romano</div>
-      <div class="ramo" data-id="economia" onclick="toggleRamo(this)">Economía</div>
-      <div class="ramo" data-id="intro_derecho" onclick="toggleRamo(this)">Introducción al Derecho</div>
-      <div class="ramo" data-id="teoria_politica" onclick="toggleRamo(this)">Teoría política</div>
-      <div class="ramo" data-id="comunicacion" onclick="toggleRamo(this)">Taller comunicación y autorregulación</div>
-      <div class="ramo" data-id="filosofia" onclick="toggleRamo(this)">Filosofía jurídica y moral</div>
-      <div class="ramo" data-id="ingles1" onclick="toggleRamo(this)">Taller de inglés 1</div>
-    </div>
+  <h1>Malla Derecho UV</h1>
+  <div class="malla" id="contenedor-malla"></div>
+  <script>
+    const semestres = [
+  [
+    { id: "derecho-romano", nombre: "Derecho romano" },
+    { id: "economia", nombre: "Economía" },
+    { id: "intro-derecho-fuentes", nombre: "Introducción al derecho: órdenes normativos y fuentes del derecho" },
+    { id: "teoria-politica", nombre: "Teoría política" },
+    { id: "taller-comunicacion", nombre: "Taller de comunicación y competencias de autorregulación" },
+    { id: "filosofia-juridica", nombre: "Introducción a la filosofía jurídica y moral" },
+    { id: "ingles-1", nombre: "Taller de inglés 1" }
+  ],
+  [
+    { id: "historia-derecho", nombre: "Historia del derecho" },
+    { id: "derecho-economico", nombre: "Derecho económico: regulación económica" },
+    { id: "intro-derecho-interpretacion", nombre: "Introducción al derecho: ordenamiento jurídico e interpretación" },
+    { id: "historia-institucional", nombre: "Historia institucional de Chile" },
+    { id: "lectura-critica", nombre: "Lectura crítica y autorregulación" },
+    { id: "taller-tecnologia", nombre: "Taller de derecho y tecnología" },
+    { id: "ingles-2", nombre: "Taller de inglés 2" },
+    { id: "integracion-1", nombre: "Taller de integración 1" }
+  ],
+  [
+    { id: "civil-acto-juridico", nombre: "Derecho civil: teoría del acto jurídico" },
+    { id: "procesal-intro", nombre: "Derecho procesal civil: introducción al derecho procesal" },
+    { id: "economico-orden-publico", nombre: "Derecho económico: orden público económico" },
+    { id: "constitucional-principios", nombre: "Derecho constitucional: principios constitucionales y derechos fundamentales" },
+    { id: "internacional-sociedad", nombre: "Derecho internacional público: la sociedad internacional y su ordenamiento jurídico" },
+    { id: "ingles-3", nombre: "Taller de inglés 3" }
+  ],
+  [
+    { id: "civil-bienes", nombre: "Derecho civil: bienes" },
+    { id: "constitucional-organico", nombre: "Derecho constitucional orgánico" },
+    { id: "internacional-corporacion", nombre: "Derecho internacional público: derecho de la corporación internacional" },
+    { id: "procesal-instituciones", nombre: "Derecho procesal civil: instituciones básicas del procedimiento" },
+    { id: "resolucion-conflictos", nombre: "Resolución alternativa de conflictos" },
+    { id: "penal-intro", nombre: "Derecho penal: introducción al derecho penal y a la teoría del delito" },
+    { id: "integracion-2", nombre: "Taller de integración 2" }
+  ],
+  [
+    { id: "civil-obligaciones", nombre: "Derecho civil: obligaciones" },
+    { id: "trabajo-individual", nombre: "Derecho individual del trabajo" },
+    { id: "procesal-declarativos", nombre: "Derecho procesal civil: procedimientos declarativos" },
+    { id: "administrativo-organizacion", nombre: "Derecho administrativo: organización y actividad administrativa" },
+    { id: "penal-teorias", nombre: "Derecho penal: teorías del delito y de la pena" },
+    { id: "tecnicas-normas", nombre: "Taller de técnicas en elaboración de normas" }
+  ],
+  [
+    { id: "civil-fuentes", nombre: "Derecho civil: fuentes de las obligaciones" },
+    { id: "procesal-recursos", nombre: "Derecho procesal civil: recursos y ejecución" },
+    { id: "trabajo-colectivo", nombre: "Derecho colectivo del trabajo" },
+    { id: "administrativo-control", nombre: "Derecho administrativo: control y responsabilidad de la administración" },
+    { id: "sociologia", nombre: "Sociología jurídica" },
+    { id: "remedial", nombre: "Examen de integración / Taller remedial de integración" }
+  ],
+  [
+    { id: "civil-familia", nombre: "Derecho civil: derecho de familia" },
+    { id: "comercial-actos", nombre: "Derecho comercial: actos mercantiles y organización jurídica de la empresa" },
+    { id: "procesal-penal", nombre: "Derecho procesal penal" },
+    { id: "tributario-tributos", nombre: "Derecho tributario: los tributos" },
+    { id: "penal-sociedad", nombre: "Derecho penal: delitos contra bienes jurídicos de la sociedad y del Estado" },
+    { id: "electivo-1", nombre: "Curso electivo 1" }
+  ],
+  [
+    { id: "civil-sucesorio", nombre: "Derecho civil: derecho sucesorio" },
+    { id: "comercial-contratos", nombre: "Derecho comercial: contratos mercantiles y títulos de crédito" },
+    { id: "litigacion", nombre: "Litigación oral" },
+    { id: "tributario-renta", nombre: "Derecho tributario: impuestos a la renta y a las ventas y servicios" },
+    { id: "electivo-2", nombre: "Curso electivo 2" },
+    { id: "electivo-3", nombre: "Curso electivo 3" },
+    { id: "integracion-3", nombre: "Taller de integración 3" },
+    { id: "perfil-1", nombre: "Taller de integración perfil sello UV 1" }
+  ],
+  [
+    { id: "electivo-4", nombre: "Curso electivo 4" },
+    { id: "electivo-5", nombre: "Curso electivo 5" },
+    { id: "seminario-1", nombre: "Seminario de licenciatura 1" },
+    { id: "electivo-6", nombre: "Curso electivo 6" },
+    { id: "filosofia-derecho", nombre: "Filosofía del derecho" },
+    { id: "perfil-2", nombre: "Taller de integración perfil sello UV 2" },
+    { id: "clinica-1", nombre: "Clínica jurídica (1)" }
+  ],
+  [
+    { id: "seminario-integracion", nombre: "Seminario de integración" },
+    { id: "insercion", nombre: "Taller de inserción profesional" },
+    { id: "seminario-2", nombre: "Seminario de licenciatura 2" },
+    { id: "clinica-2", nombre: "Clínica jurídica (2)" }
+  ]
+];
+    const prerrequisitos = {
+  "historia-derecho": ["derecho-romano"],
+  "derecho-economico": ["economia", "intro-derecho-fuentes"],
+  "intro-derecho-interpretacion": ["intro-derecho-fuentes"],
+  "historia-institucional": ["historia-derecho"],
+  "lectura-critica": ["taller-comunicacion"],
+  "taller-tecnologia": ["filosofia-juridica"],
+  "ingles-2": ["ingles-1"],
+  "integracion-1": ["derecho-romano"],
+  "civil-acto-juridico": ["intro-derecho-interpretacion"],
+  "procesal-intro": ["intro-derecho-interpretacion"],
+  "economico-orden-publico": ["economia"],
+  "constitucional-principios": ["intro-derecho-fuentes", "teoria-politica"],
+  "internacional-sociedad": ["intro-derecho-fuentes"],
+  "ingles-3": ["ingles-2"],
+  "civil-bienes": ["civil-acto-juridico"],
+  "constitucional-organico": ["intro-derecho-fuentes", "teoria-politica"],
+  "internacional-corporacion": ["intro-derecho-fuentes"],
+  "procesal-instituciones": ["procesal-intro"],
+  "resolucion-conflictos": ["intro-derecho-interpretacion"],
+  "penal-intro": ["constitucional-principios", "intro-derecho-interpretacion"],
+  "integracion-2": [
+    "civil-acto-juridico",
+    "procesal-intro",
+    "economico-orden-publico",
+    "constitucional-principios",
+    "internacional-sociedad",
+    "civil-bienes",
+    "constitucional-organico",
+    "internacional-corporacion",
+    "procesal-instituciones",
+    "resolucion-conflictos"
+  ],
+  "civil-obligaciones": ["civil-acto-juridico"],
+  "trabajo-individual": ["civil-acto-juridico"],
+  "procesal-declarativos": ["procesal-instituciones"],
+  "administrativo-organizacion": ["constitucional-organico"],
+  "penal-teorias": ["penal-intro"],
+  "tecnicas-normas": ["constitucional-organico"],
+  "civil-fuentes": ["civil-acto-juridico"],
+  "procesal-recursos": ["procesal-instituciones"],
+  "trabajo-colectivo": ["civil-acto-juridico"],
+  "administrativo-control": ["constitucional-organico"],
+  "penal-sociedad": ["penal-teorias"],
+  "remedial": [
+    "civil-obligaciones",
+    "trabajo-individual",
+    "procesal-declarativos",
+    "administrativo-organizacion",
+    "penal-teorias",
+    "tecnicas-normas",
+    "civil-fuentes",
+    "procesal-recursos",
+    "trabajo-colectivo",
+    "administrativo-control",
+    "penal-sociedad"
+  ],
+  "civil-familia": ["remedial"],
+  "comercial-actos": ["remedial"],
+  "procesal-penal": ["remedial"],
+  "tributario-tributos": ["remedial"],
+  "electivo-1": ["integracion-2"],
+  "civil-sucesorio": ["remedial"],
+  "comercial-contratos": ["remedial"],
+  "litigacion": ["remedial"],
+  "tributario-renta": ["remedial"],
+  "electivo-2": ["integracion-2"],
+  "electivo-3": ["integracion-2"],
+  "integracion-3": [
+    "civil-familia",
+    "comercial-actos",
+    "procesal-penal",
+    "tributario-tributos",
+    "penal-sociedad",
+    "civil-sucesorio",
+    "comercial-contratos",
+    "litigacion",
+    "tributario-renta"
+  ],
+  "perfil-1": ["remedial"],
+  "electivo-4": ["integracion-2"],
+  "electivo-5": ["integracion-2"],
+  "seminario-1": [
+    "civil-familia",
+    "procesal-penal",
+    "penal-sociedad"
+  ],
+  "electivo-6": ["integracion-2"],
+  "filosofia-derecho": ["remedial"],
+  "perfil-2": ["perfil-1"],
+  "clinica-1": ["civil-familia", "litigacion"],
+  "seminario-integracion": ["procesal-penal"],
+  "insercion": ["litigacion"],
+  "seminario-2": ["seminario-1"],
+  "clinica-2": ["civil-familia", "litigacion"]
+};
 
-    <!-- Semestre 2 -->
-    <div class="semestre">
-      <h2>2° Semestre</h2>
-      <div class="ramo" data-id="historia_derecho" data-prereq="romano" onclick="toggleRamo(this)">Historia del derecho</div>
-      <div class="ramo" data-id="eco_regulacion" data-prereq="economia" onclick="toggleRamo(this)">Derecho económico: regulación económica</div>
-      <div class="ramo" data-id="intro_ord_juridico" data-prereq="intro_derecho" onclick="toggleRamo(this)">Intro al derecho: ordenamiento jurídico</div>
-      <div class="ramo" data-id="historia_institucional" onclick="toggleRamo(this)">Historia institucional de Chile</div>
-      <div class="ramo" data-id="lectura_critica" data-prereq="comunicacion" onclick="toggleRamo(this)">Lectura crítica y autorregulación</div>
-      <div class="ramo" data-id="tecnologia" onclick="toggleRamo(this)">Taller de derecho y tecnología</div>
-      <div class="ramo" data-id="ingles2" data-prereq="ingles1" onclick="toggleRamo(this)">Taller de inglés 2</div>
-    </div>
-  
-    <!-- Semestre 3 -->
-    <div class="semestre">
-      <h2>3° Semestre</h2>
-      <div class="ramo" data-id="civil_acto" data-prereq="intro_ord_juridico" onclick="toggleRamo(this)">Derecho civil: teoría del acto jurídico</div>
-      <div class="ramo" data-id="procesal_intro" data-prereq="intro_ord_juridico" onclick="toggleRamo(this)">Procesal civil: introducción</div>
-      <div class="ramo" data-id="eco_ope" data-prereq="economia" onclick="toggleRamo(this)">Económico: orden público económico</div>
-      <div class="ramo" data-id="const_ppdd" data-prereq="intro_derecho teoria_politica" onclick="toggleRamo(this)">Constitucional: principios y DD.FF.</div>
-      <div class="ramo" data-id="dip_sociedad" data-prereq="intro_derecho" onclick="toggleRamo(this)">DIP: sociedad internacional</div>
-      <div class="ramo" data-id="ingles3" data-prereq="ingles2" onclick="toggleRamo(this)">Taller de inglés 3</div>
-    </div>
+    const contenedor = document.getElementById("contenedor-malla");
+    semestres.forEach((semestre, index) => {
+      const semestreDiv = document.createElement("div");
+      semestreDiv.className = "semestre";
+      semestreDiv.innerHTML = `<h2>${index + 1}º Semestre</h2>`;
+      const ramosDiv = document.createElement("div");
+      ramosDiv.className = "ramos";
+      semestre.forEach(ramo => {
+        const ramoDiv = document.createElement("div");
+        ramoDiv.className = "ramo";
+        ramoDiv.textContent = ramo.nombre;
+        ramoDiv.dataset.id = ramo.id;
+        ramosDiv.appendChild(ramoDiv);
+      });
+      semestreDiv.appendChild(ramosDiv);
+      contenedor.appendChild(semestreDiv);
+    });
 
-    <!-- Semestre 4 -->
-    <div class="semestre">
-      <h2>4° Semestre</h2>
-      <div class="ramo" data-id="civil_bienes" data-prereq="civil_acto" onclick="toggleRamo(this)">Derecho civil: bienes</div>
-      <div class="ramo" data-id="const_organico" data-prereq="const_ppdd" onclick="toggleRamo(this)">Constitucional orgánico</div>
-      <div class="ramo" data-id="dip_corp" data-prereq="dip_sociedad" onclick="toggleRamo(this)">DIP: corporación internacional</div>
-      <div class="ramo" data-id="procesal_inst" data-prereq="procesal_intro" onclick="toggleRamo(this)">Procesal civil: instituciones básicas</div>
-      <div class="ramo" data-id="ra_conflictos" data-prereq="intro_ord_juridico" onclick="toggleRamo(this)">Resolución alternativa de conflictos</div>
-      <div class="ramo" data-id="penal_intro" data-prereq="intro_ord_juridico const_ppdd" onclick="toggleRamo(this)">Penal: introducción y teoría del delito</div>
-    </div>
+    function actualizarBloqueos() {
+      document.querySelectorAll(".ramo").forEach(ramo => {
+        const id = ramo.dataset.id;
+        const requisitos = prerrequisitos[id] || [];
+        const cumplidos = requisitos.every(req => {
+          const reqRamo = document.querySelector(`.ramo[data-id="${req}"]`);
+          return reqRamo && reqRamo.classList.contains("aprobado");
+        });
+        if (requisitos.length && !cumplidos) {
+          ramo.classList.add("bloqueado");
+        } else {
+          ramo.classList.remove("bloqueado");
+        }
+      });
+    }
 
-    <!-- Semestre 5 -->
-    <div class="semestre">
-      <h2>5° Semestre</h2>
-      <div class="ramo" data-id="civil_obligaciones" data-prereq="civil_acto" onclick="toggleRamo(this)">Civil: obligaciones</div>
-      <div class="ramo" data-id="trabajo_ind" data-prereq="civil_acto" onclick="toggleRamo(this)">Derecho individual del trabajo</div>
-      <div class="ramo" data-id="procesal_decl" data-prereq="procesal_inst" onclick="toggleRamo(this)">Procesal civil: procedimientos declarativos</div>
-      <div class="ramo" data-id="adm_org" data-prereq="const_organico" onclick="toggleRamo(this)">Administrativo: organización y actividad</div>
-      <div class="ramo" data-id="penal_teoria" data-prereq="penal_intro" onclick="toggleRamo(this)">Penal: teorías del delito y de la pena</div>
-      <div class="ramo" data-id="tecnicas_normas" data-prereq="const_organico" onclick="toggleRamo(this)">Taller técnicas de elaboración normativa</div>
-    </div>
-
-    <!-- Semestre 6 -->
-    <div class="semestre">
-      <h2>6° Semestre</h2>
-      <div class="ramo" data-id="civil_fuentes" data-prereq="civil_obligaciones" onclick="toggleRamo(this)">Civil: fuentes de las obligaciones</div>
-      <div class="ramo" data-id="procesal_recursos" data-prereq="procesal_decl" onclick="toggleRamo(this)">Procesal civil: recursos y ejecución</div>
-      <div class="ramo" data-id="trabajo_colectivo" data-prereq="civil_acto" onclick="toggleRamo(this)">Derecho colectivo del trabajo</div>
-      <div class="ramo" data-id="adm_control" data-prereq="const_organico" onclick="toggleRamo(this)">Administrativo: control de la administración</div>
-      <div class="ramo" data-id="sociologia" data-prereq="teoria_politica intro_derecho" onclick="toggleRamo(this)">Sociología jurídica</div>
-      <div class="ramo" data-id="examen_integracion" data-prereq="civil_fuentes procesal_recursos trabajo_colectivo adm_control sociologia penal_teoria tecnicas_normas" onclick="toggleRamo(this)">Examen de integración</div>
-    </div>
-
-    <!-- Semestre 7 -->
-    <div class="semestre">
-      <h2>7° Semestre</h2>
-      <div class="ramo" data-id="civil_familia" data-prereq="examen_integracion" onclick="toggleRamo(this)">Civil: derecho de familia</div>
-      <div class="ramo" data-id="comercial_organizacion" data-prereq="examen_integracion" onclick="toggleRamo(this)">Comercial: actos mercantiles y empresa</div>
-      <div class="ramo" data-id="procesal_penal" data-prereq="penal_teoria" onclick="toggleRamo(this)">Procesal penal</div>
-      <div class="ramo" data-id="tributario_tributos" data-prereq="examen_integracion" onclick="toggleRamo(this)">Tributario: los tributos</div>
-      <div class="ramo" data-id="penal_sociedad" data-prereq="penal_teoria" onclick="toggleRamo(this)">Penal: delitos contra la sociedad y el Estado</div>
-      <div class="ramo" data-id="electivo1" data-prereq="examen_integracion" onclick="toggleRamo(this)">Curso electivo 1</div>
-    </div>
-
-    <!-- Semestre 8 -->
-    <div class="semestre">
-      <h2>8° Semestre</h2>
-      <div class="ramo" data-id="civil_sucesorio" data-prereq="civil_familia" onclick="toggleRamo(this)">Civil: derecho sucesorio</div>
-      <div class="ramo" data-id="comercial_contratos" data-prereq="comercial_organizacion" onclick="toggleRamo(this)">Comercial: contratos y títulos</div>
-      <div class="ramo" data-id="litigacion_oral" data-prereq="procesal_penal" onclick="toggleRamo(this)">Litigación oral</div>
-      <div class="ramo" data-id="tributario_impuestos" data-prereq="tributario_tributos" onclick="toggleRamo(this)">Tributario: impuestos a la renta y al consumo</div>
-      <div class="ramo" data-id="electivo2" data-prereq="examen_integracion" onclick="toggleRamo(this)">Curso electivo 2</div>
-      <div class="ramo" data-id="electivo3" data-prereq="examen_integracion" onclick="toggleRamo(this)">Curso electivo 3</div>
-      <div class="ramo" data-id="taller_integracion3" data-prereq="examen_integracion" onclick="toggleRamo(this)">Taller de integración 3</div>
-      <div class="ramo" data-id="perfil_uv1" data-prereq="examen_integracion" onclick="toggleRamo(this)">Taller de integración perfil sello UV 1</div>
-    </div>
-
-    <!-- Semestre 9 -->
-    <div class="semestre">
-      <h2>9° Semestre</h2>
-      <div class="ramo" data-id="electivo4" data-prereq="examen_integracion" onclick="toggleRamo(this)">Curso electivo 4</div>
-      <div class="ramo" data-id="electivo5" data-prereq="examen_integracion" onclick="toggleRamo(this)">Curso electivo 5</div>
-      <div class="ramo" data-id="electivo6" data-prereq="examen_integracion" onclick="toggleRamo(this)">Curso electivo 6</div>
-      <div class="ramo" data-id="seminario1" data-prereq="civil_familia procesal_penal penal_sociedad" onclick="toggleRamo(this)">Seminario de licenciatura 1</div>
-      <div class="ramo" data-id="filosofia_derecho" data-prereq="examen_integracion" onclick="toggleRamo(this)">Filosofía del derecho</div>
-      <div class="ramo" data-id="perfil_uv2" data-prereq="perfil_uv1" onclick="toggleRamo(this)">Taller perfil sello UV 2</div>
-      <div class="ramo" data-id="clinica1" data-prereq="civil_familia litigacion_oral" onclick="toggleRamo(this)">Clínica jurídica 1</div>
-    </div>
-
-    <!-- Semestre 10 -->
-    <div class="semestre">
-      <h2>10° Semestre</h2>
-      <div class="ramo" data-id="seminario_integracion" data-prereq="procesal_penal comercial_contratos" onclick="toggleRamo(this)">Seminario de integración</div>
-      <div class="ramo" data-id="insercion" data-prereq="litigacion_oral" onclick="toggleRamo(this)">Taller de inserción profesional</div>
-      <div class="ramo" data-id="seminario2" data-prereq="seminario1" onclick="toggleRamo(this)">Seminario de licenciatura 2</div>
-      <div class="ramo" data-id="clinica2" data-prereq="clinica1 litigacion_oral" onclick="toggleRamo(this)">Clínica jurídica 2</div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+    document.addEventListener("click", e => {
+      if (e.target.classList.contains("ramo") && !e.target.classList.contains("bloqueado")) {
+        e.target.classList.toggle("aprobado");
+        actualizarBloqueos();
+      }
+    });
+    actualizarBloqueos();
+  </script>
 </body>
 </html>
-
