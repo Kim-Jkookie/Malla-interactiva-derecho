@@ -1,0 +1,71 @@
+/* Estilos generales */
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  margin: 0;
+  background-color: #f4f4f4;
+  overflow-x: hidden;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Contenedor de la malla */
+.grid {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+}
+
+/* Contenedor de cada semestre */
+.semestre {
+  min-width: 250px;
+  max-width: 250px;
+  flex-shrink: 0;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Título del semestre */
+.semestre h2 {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+/* Cada ramo */
+.ramo {
+  background-color: pink;
+  color: #333;
+  margin: 8px 0;
+  padding: 10px;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  line-height: 1.2;
+  user-select: none;
+}
+
+/* Ramo aprobado */
+.ramo.aprobado {
+  background-color: purple;
+  color: white;
+  text-decoration: line-through;
+}
+
+/* Ramo bloqueado */
+.ramo.bloqueado {
+  background-color: lightgray;
+  color: #666;
+  cursor: not-allowed;
+}
+
